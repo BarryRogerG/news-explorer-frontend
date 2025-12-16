@@ -3,7 +3,8 @@
  * Handles requests to News API service
  */
 
-const newsApiBaseUrl = process.env.NODE_ENV === "production" 
+// Vite uses import.meta.env instead of process.env
+const newsApiBaseUrl = import.meta.env.PROD
   ? "https://nomoreparties.co/news/v2/everything"
   : "https://newsapi.org/v2/everything";
 
