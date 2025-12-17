@@ -14,7 +14,7 @@ function Header({ onSignInClick, onSignOut, isLoggedIn, currentUser }) {
       <Navigation 
         onSignInClick={onSignInClick}
         onSignOut={onSignOut}
-        isMainPage={isMainPage}
+        isOverlay={isMainPage}
         isLoggedIn={isLoggedIn}
         currentUser={currentUser}
       />

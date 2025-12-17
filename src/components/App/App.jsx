@@ -1,63 +1,63 @@
 import { useState, useEffect } from 'react'
+
 import { Routes, Route } from 'react-router-dom'
+
 import Header from '../Header/Header'
 import Main from '../Main/Main'
 import SavedNews from '../SavedNews/SavedNews'
 import Footer from '../Footer/Footer'
 import LoginModal from '../LoginModal/LoginModal'
 import RegisterModal from '../RegisterModal/RegisterModal'
-import { mockLogin, mockRegister, mockCheckToken, mockGetSavedArticles, mockSaveArticle, mockDeleteArticle } from '../../utils/mockApi'
+import {
+  mockLogin,
+  mockRegister,
+  mockCheckToken,
+  mockGetSavedArticles,
+  mockSaveArticle,
+  mockDeleteArticle,
+} from '../../utils/mockApi'
 import './App.css'
 
 function App() {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false)
+  const [modalType, setModalType] = useState(null) // 'login' | 'register' | null
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [savedArticles, setSavedArticles] = useState([])
 
-  // Check if user is logged in on mount
+  const openLoginModal = () => setModalType('login')
+  const openRegisterModal = () => setModalType('register')
+  const closeModals = () => setModalType(null)
+
+  const loadSavedArticles = async () => {
+    try {
+      const saved = await mockGetSavedArticles()
+      setSavedArticles(saved)
+    } catch (error) {
+      console.error('Failed to load saved articles:', error)
+    }
+  }
+
   useEffect(() => {
     const checkAuth = async () => {
       const authData = await mockCheckToken()
       if (authData) {
         setIsLoggedIn(true)
         setCurrentUser(authData.user)
-        // Load saved articles
-        const saved = await mockGetSavedArticles()
-        setSavedArticles(saved)
+        await loadSavedArticles()
       }
     }
     checkAuth()
   }, [])
-
-  const handleOpenLoginModal = () => {
-    setIsLoginModalOpen(true)
-    setIsRegisterModalOpen(false)
-  }
-
-  const handleOpenRegisterModal = () => {
-    setIsRegisterModalOpen(true)
-    setIsLoginModalOpen(false)
-  }
-
-  const handleCloseModals = () => {
-    setIsLoginModalOpen(false)
-    setIsRegisterModalOpen(false)
-  }
 
   const handleLogin = async (credentials) => {
     try {
       const { user } = await mockLogin(credentials)
       setIsLoggedIn(true)
       setCurrentUser(user)
-      // Load saved articles
-      const saved = await mockGetSavedArticles()
-      setSavedArticles(saved)
-      handleCloseModals()
+      await loadSavedArticles()
+      closeModals()
     } catch (error) {
       console.error('Login failed:', error)
-      // In real app, show error message to user
     }
   }
 
@@ -67,10 +67,9 @@ function App() {
       setIsLoggedIn(true)
       setCurrentUser(user)
       setSavedArticles([])
-      handleCloseModals()
+      closeModals()
     } catch (error) {
       console.error('Registration failed:', error)
-      // In real app, show error message to user
     }
   }
 
@@ -84,10 +83,10 @@ function App() {
 
   const handleSaveArticle = async (article) => {
     if (!isLoggedIn) return
-    
+
     try {
-      const updated = await mockSaveArticle(article)
-      setSavedArticles(updated)
+      const updatedSavedArticles = await mockSaveArticle(article)
+      setSavedArticles(updatedSavedArticles)
     } catch (error) {
       console.error('Save article failed:', error)
     }
@@ -95,10 +94,10 @@ function App() {
 
   const handleDeleteArticle = async (article) => {
     if (!isLoggedIn) return
-    
+
     try {
-      const updated = await mockDeleteArticle(article)
-      setSavedArticles(updated)
+      const updatedSavedArticles = await mockDeleteArticle(article)
+      setSavedArticles(updatedSavedArticles)
     } catch (error) {
       console.error('Delete article failed:', error)
     }
@@ -106,52 +105,51 @@ function App() {
 
   return (
     <div className="app">
-      <Header 
-        onSignInClick={handleOpenLoginModal}
+      <Header
+        onSignInClick={openLoginModal}
         onSignOut={handleSignOut}
         isLoggedIn={isLoggedIn}
         currentUser={currentUser}
       />
       <Routes>
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
-            <Main 
+            <Main
               isLoggedIn={isLoggedIn}
               savedArticles={savedArticles}
               onSaveArticle={handleSaveArticle}
               onDeleteArticle={handleDeleteArticle}
             />
-          } 
+          }
         />
-        <Route 
-          path="/saved-news" 
+        <Route
+          path="/saved-news"
           element={
-            <SavedNews 
+            <SavedNews
               isLoggedIn={isLoggedIn}
               currentUser={currentUser}
               savedArticles={savedArticles}
               onDeleteArticle={handleDeleteArticle}
             />
-          } 
+          }
         />
       </Routes>
       <Footer />
       <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={handleCloseModals}
+        isOpen={modalType === 'login'}
+        onClose={closeModals}
         onLogin={handleLogin}
-        onSwitchToRegister={handleOpenRegisterModal}
+        onSwitchToRegister={openRegisterModal}
       />
       <RegisterModal
-        isOpen={isRegisterModalOpen}
-        onClose={handleCloseModals}
+        isOpen={modalType === 'register'}
+        onClose={closeModals}
         onRegister={handleRegister}
-        onSwitchToLogin={handleOpenLoginModal}
+        onSwitchToLogin={openLoginModal}
       />
     </div>
   )
 }
 
 export default App
-

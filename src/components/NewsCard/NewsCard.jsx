@@ -1,78 +1,121 @@
+import { useCallback } from 'react'
+
+import PropTypes from 'prop-types'
+
 import './NewsCard.css'
 
-function NewsCard({ 
-  card, 
-  isLoggedIn = false, 
-  isSaved = false, 
-  onSaveClick, 
+const formatDate = (dateString) =>
+  dateString
+    ? new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : ''
+
+function BookmarkIcon({ filled }) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill={filled ? 'white' : 'none'}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+BookmarkIcon.propTypes = {
+  filled: PropTypes.bool,
+}
+
+function NewsCard({
+  card,
+  isLoggedIn = false,
+  isSaved = false,
+  onSaveClick,
   onDeleteClick,
-  onCardClick 
+  onCardClick,
 }) {
-  // Format date: "November 4, 2020"
-  const formatDate = (dateString) => {
-    if (!dateString) return ''
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    })
-  }
+  const {
+    title = 'No title available',
+    description,
+    content,
+    url,
+    urlToImage,
+    publishedAt,
+    keyword = 'Nature',
+    source,
+  } = card || {}
 
-  // Get source name
-  const sourceName = card.source?.name || card.source || 'Unknown Source'
+  const sourceName = source?.name || source || 'Unknown Source'
 
-  // Handle bookmark click
-  const handleBookmarkClick = (e) => {
-    e.stopPropagation() // Prevent card click when clicking bookmark
-    if (isSaved && onDeleteClick) {
-      onDeleteClick(card)
-    } else if (!isSaved && onSaveClick) {
-      onSaveClick(card)
+  const handleBookmarkClick = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (isSaved) {
+        onDeleteClick?.(card)
+      } else {
+        onSaveClick?.(card)
+      }
+    },
+    [isSaved, onDeleteClick, onSaveClick, card]
+  )
+
+  const handleCardClick = useCallback(() => {
+    if (onCardClick && url) {
+      onCardClick(url)
     }
-  }
+  }, [onCardClick, url])
 
-  // Handle card click (optional - to open article)
-  const handleCardClick = () => {
-    if (onCardClick && card.url) {
-      onCardClick(card.url)
-    }
-  }
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        handleCardClick()
+      }
+    },
+    [handleCardClick]
+  )
 
   return (
-    <article 
+    <article
       className={`news-card ${onCardClick ? 'news-card_clickable' : ''}`}
+      role={onCardClick ? 'button' : undefined}
+      tabIndex={onCardClick ? 0 : undefined}
       onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
     >
       <div className="news-card__image-container">
-        {card.urlToImage ? (
-          <img 
-            src={card.urlToImage} 
-            alt={card.title || 'News article'}
+        {urlToImage ? (
+          <img
+            src={urlToImage}
+            alt={title}
             className="news-card__image"
+            loading="lazy"
           />
         ) : (
-          <div className="news-card__image-placeholder">
-            No Image
-          </div>
+          <div className="news-card__image-placeholder">No Image</div>
         )}
+
         <div className="news-card__bookmark-container">
           {isLoggedIn ? (
             <button
               type="button"
-              className={`news-card__bookmark ${isSaved ? 'news-card__bookmark_saved' : ''}`}
+              className={`news-card__bookmark ${
+                isSaved ? 'news-card__bookmark_saved' : ''
+              }`}
               onClick={handleBookmarkClick}
               aria-label={isSaved ? 'Remove from saved' : 'Save article'}
             >
-              {isSaved ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              )}
+              <BookmarkIcon filled={isSaved} />
             </button>
           ) : (
             <div className="news-card__bookmark-tooltip-wrapper">
@@ -80,39 +123,41 @@ function NewsCard({
                 type="button"
                 className="news-card__bookmark news-card__bookmark_inactive"
                 aria-label="Sign in to save articles"
+                disabled
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <BookmarkIcon />
               </button>
-              <div className="news-card__tooltip">Sign in to save articles</div>
+              <div className="news-card__tooltip">
+                Sign in to save articles
+              </div>
             </div>
           )}
         </div>
+
         {!isLoggedIn && (
-          <div className="news-card__keyword">
-            {card.keyword || 'Nature'}
-          </div>
+          <div className="news-card__keyword">{keyword}</div>
         )}
       </div>
-      
+
       <div className="news-card__content">
-        <p className="news-card__date">
-          {formatDate(card.publishedAt)}
-        </p>
-        <h3 className="news-card__title">
-          {card.title || 'No title available'}
-        </h3>
+        <p className="news-card__date">{formatDate(publishedAt)}</p>
+        <h3 className="news-card__title">{title}</h3>
         <p className="news-card__description">
-          {card.description || card.content || 'No description available'}
+          {description || content || 'No description available'}
         </p>
-        <p className="news-card__source">
-          {sourceName}
-        </p>
+        <p className="news-card__source">{sourceName}</p>
       </div>
     </article>
   )
 }
 
-export default NewsCard
+NewsCard.propTypes = {
+  card: PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool,
+  isSaved: PropTypes.bool,
+  onSaveClick: PropTypes.func,
+  onDeleteClick: PropTypes.func,
+  onCardClick: PropTypes.func,
+}
 
+export default NewsCard

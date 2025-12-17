@@ -1,22 +1,33 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
+
 import './Main.css'
+
 import SearchForm from '../SearchForm/SearchForm'
 import Preloader from '../Preloader/Preloader'
 import NewsCard from '../NewsCard/NewsCard'
 import { searchNews } from '../../utils/newsApi'
-import { NEWS_API_KEY } from '../../utils/config'
 
-function Main({ isLoggedIn = false, savedArticles = [], onSaveArticle, onDeleteArticle }) {
+const INITIAL_DISPLAY_COUNT = 3
+
+function Main({
+  isLoggedIn = false,
+  savedArticles = [],
+  onSaveArticle,
+  onDeleteArticle,
+}) {
   const [isLoading, setIsLoading] = useState(false)
   const [articles, setArticles] = useState([])
   const [hasSearched, setHasSearched] = useState(false)
   const [error, setError] = useState(null)
-  const [displayCount, setDisplayCount] = useState(3)
+  const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT)
   const [searchKeyword, setSearchKeyword] = useState('')
 
-  // Handle search
+  const normalizeSearchTerm = (term) => term.trim()
+
   const handleSearch = async (searchTerm) => {
-    if (!searchTerm || !searchTerm.trim()) {
+    const normalizedTerm = normalizeSearchTerm(searchTerm)
+
+    if (!normalizedTerm) {
       setError('Please enter a keyword')
       return
     }
@@ -24,46 +35,53 @@ function Main({ isLoggedIn = false, savedArticles = [], onSaveArticle, onDeleteA
     setIsLoading(true)
     setHasSearched(true)
     setError(null)
-    setDisplayCount(3) // Reset to show first 3 cards
-    setSearchKeyword(searchTerm.trim())
+    setDisplayCount(INITIAL_DISPLAY_COUNT)
+    setSearchKeyword(normalizedTerm)
 
     try {
-      const data = await searchNews(searchTerm.trim(), NEWS_API_KEY)
-      
-      if (data.articles && data.articles.length > 0) {
-        // Add keyword to each article for tracking
-        const articlesWithKeyword = data.articles.map(article => ({
-          ...article,
-          keyword: searchTerm.trim()
-        }))
-        setArticles(articlesWithKeyword)
-      } else {
-        setArticles([])
-      }
+      const articles = await searchNews(normalizedTerm)
+
+      const articlesWithKeyword = (articles || []).map((article) => ({
+        ...article,
+        keyword: normalizedTerm,
+      }))
+
+      setArticles(articlesWithKeyword)
     } catch (err) {
-      setError(err.message || 'Sorry, something went wrong during the request. Please try again later.')
+      setError(
+        err.message ||
+          'Sorry, something went wrong during the request. Please try again later.'
+      )
       setArticles([])
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Handle "Show more" button
-  const handleShowMore = () => {
-    setDisplayCount(prev => prev + 3)
-  }
+  const handleShowMore = useCallback(() => {
+    setDisplayCount((prev) => prev + INITIAL_DISPLAY_COUNT)
+  }, [])
 
-  // Check if article is saved
-  const isArticleSaved = (article) => {
-    if (!isLoggedIn || !savedArticles || savedArticles.length === 0) {
-      return false
-    }
-    return savedArticles.some(saved => saved.url === article.url)
-  }
+  const handleCardClick = useCallback((url) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }, [])
 
-  // Get articles to display (limited by displayCount)
-  const displayedArticles = articles.slice(0, displayCount)
-  const hasMoreArticles = articles.length > displayCount
+  const isArticleSaved = useCallback(
+    (article) =>
+      isLoggedIn &&
+      savedArticles.some((saved) => saved.url === article.url),
+    [isLoggedIn, savedArticles]
+  )
+
+  const displayedArticles = useMemo(
+    () => articles.slice(0, displayCount),
+    [articles, displayCount]
+  )
+
+  const hasMoreArticles = useMemo(
+    () => articles.length > displayCount,
+    [articles.length, displayCount]
+  )
 
   return (
     <main className="main">
@@ -74,35 +92,41 @@ function Main({ isLoggedIn = false, savedArticles = [], onSaveArticle, onDeleteA
         </p>
         <SearchForm onSearch={handleSearch} />
       </section>
+
       <section className="main__results">
-        {isLoading ? (
-          <Preloader />
-        ) : error ? (
+        {isLoading && <Preloader />}
+
+        {!isLoading && error && (
           <div className="main__error">
             <p className="main__error-text">{error}</p>
           </div>
-        ) : hasSearched && articles.length === 0 ? (
+        )}
+
+        {!isLoading && hasSearched && articles.length === 0 && !error && (
           <div className="main__no-results">
             <p className="main__no-results-text">Nothing found</p>
           </div>
-        ) : displayedArticles.length > 0 ? (
+        )}
+
+        {!isLoading && displayedArticles.length > 0 && (
           <>
             <div className="main__cards-grid">
-              {displayedArticles.map((article, index) => (
-                <NewsCard 
-                  key={article.url || index}
+              {displayedArticles.map((article) => (
+                <NewsCard
+                  key={article.url}
                   card={article}
                   isLoggedIn={isLoggedIn}
                   isSaved={isArticleSaved(article)}
                   onSaveClick={onSaveArticle}
                   onDeleteClick={onDeleteArticle}
-                  onCardClick={(url) => window.open(url, '_blank')}
+                  onCardClick={handleCardClick}
                 />
               ))}
             </div>
+
             {hasMoreArticles && (
               <div className="main__show-more">
-                <button 
+                <button
                   className="main__show-more-button"
                   onClick={handleShowMore}
                 >
@@ -111,7 +135,7 @@ function Main({ isLoggedIn = false, savedArticles = [], onSaveArticle, onDeleteA
               </div>
             )}
           </>
-        ) : null}
+        )}
       </section>
     </main>
   )

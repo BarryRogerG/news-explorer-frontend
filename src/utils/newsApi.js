@@ -1,93 +1,100 @@
-/**
- * News API utility functions
- * Handles requests to News API service
- */
+// newsApi.js
 
-// Vite uses import.meta.env instead of process.env
-const newsApiBaseUrl = import.meta.env.PROD
-  ? "https://nomoreparties.co/news/v2/everything"
-  : "https://newsapi.org/v2/everything";
+// Constants
+const NEWS_API_BASE_URL = import.meta.env.PROD
+  ? 'https://nomoreparties.co/news/v2/everything'
+  : 'https://newsapi.org/v2/everything'
 
-/**
- * Get date string in YYYY-MM-DD format
- * @param {Date} date - Date object
- * @returns {string} Formatted date string
- */
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+const DAYS_BACK = 7
+
+const PAGE_SIZE = 100
+
+// API key (Vite environment variable)
+const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY
 
 /**
- * Get date 7 days ago
- * @returns {string} Formatted date string (7 days ago)
+ * Format date as YYYY-MM-DD
+ * @param {Date} date
+ * @returns {string}
  */
-const getDate7DaysAgo = () => {
-  const date = new Date();
-  date.setDate(date.getDate() - 7);
-  return formatDate(date);
-};
+const formatDate = (date) => date.toISOString().split('T')[0]
 
 /**
- * Get current date
- * @returns {string} Formatted date string (today)
+ * Get date string N days ago
+ * @param {number} days
+ * @returns {string}
  */
-const getCurrentDate = () => {
-  return formatDate(new Date());
-};
+const getDateDaysAgo = (days) => {
+  const date = new Date()
+  date.setDate(date.getDate() - days)
+  return formatDate(date)
+}
+
+/**
+ * Handle API and network errors
+ * @param {Response} response
+ */
+const handleResponseError = async (response) => {
+  if (response.status === 401) {
+    throw new Error('Invalid API key')
+  }
+
+  if (response.status === 429) {
+    throw new Error('Too many requests. Please try again later.')
+  }
+
+  const errorData = await response.json().catch(() => null)
+  throw new Error(
+    errorData?.message || `Request failed with status ${response.status}`
+  )
+}
 
 /**
  * Search for news articles
- * @param {string} keyword - Search keyword
- * @param {string} apiKey - News API key
- * @returns {Promise<Object>} API response
+ * @param {string} keyword
+ * @returns {Promise<Array>} List of articles
  */
-export const searchNews = async (keyword, apiKey) => {
-  if (!keyword || !keyword.trim()) {
-    throw new Error('Please enter a keyword');
+export const searchNews = async (keyword) => {
+  if (!keyword?.trim()) {
+    throw new Error('Please enter a keyword')
   }
 
-  if (!apiKey) {
-    throw new Error('API key is required');
+  if (!NEWS_API_KEY) {
+    throw new Error('API key is missing')
   }
 
   const params = new URLSearchParams({
     q: keyword.trim(),
-    apiKey: apiKey,
-    from: getDate7DaysAgo(),
-    to: getCurrentDate(),
-    pageSize: 100,
-  });
-
-  const url = `${newsApiBaseUrl}?${params.toString()}`;
+    from: getDateDaysAgo(DAYS_BACK),
+    to: formatDate(new Date()),
+    pageSize: PAGE_SIZE,
+    apiKey: NEWS_API_KEY,
+  })
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(`${NEWS_API_BASE_URL}?${params}`)
 
     if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error('Invalid API key');
-      }
-      if (response.status === 429) {
-        throw new Error('Too many requests. Please try again later.');
-      }
-      throw new Error(`Request failed with status ${response.status}`);
+      await handleResponseError(response)
     }
 
-    const data = await response.json();
+    const data = await response.json()
 
     if (data.status === 'error') {
-      throw new Error(data.message || 'An error occurred');
+      throw new Error(data.message || 'News API error')
     }
 
-    return data;
+    return data.articles
   } catch (error) {
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      throw new Error('Network error. Please check your connection and try again.');
+    if (
+      error.message.includes('Failed to fetch') ||
+      error.message.includes('NetworkError')
+    ) {
+      throw new Error(
+        'Network error. Please check your connection and try again.'
+      )
     }
-    throw error;
-  }
-};
 
+    throw error
+  }
+}

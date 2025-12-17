@@ -1,129 +1,92 @@
-/**
- * Mock API functions for simulating backend responses
- * These will be replaced with real API calls in Stage 2
- */
+import {
+  simulateDelay,
+  getLocalStorage,
+  setLocalStorage,
+  generateId,
+  generateToken,
+} from './mockHelpers'
 
-// Simulate user authentication
+// Mock login
 export const mockLogin = async (credentials) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
-  // Mock successful login
+  await simulateDelay(500)
+
   const mockUser = {
-    _id: 'mock-user-id',
+    _id: generateId('user'),
     name: 'Test User',
     email: credentials.email,
   }
-  
-  const mockToken = 'mock-jwt-token-' + Date.now()
-  
-  // Store in localStorage
-  localStorage.setItem('jwt', mockToken)
-  localStorage.setItem('user', JSON.stringify(mockUser))
-  
-  return { token: mockToken, user: mockUser }
+  const token = generateToken()
+
+  setLocalStorage('jwt', token)
+  setLocalStorage('user', mockUser)
+
+  return { token, user: mockUser }
 }
 
-// Simulate user registration
+// Mock registration
 export const mockRegister = async (userData) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
-  // Mock successful registration
+  await simulateDelay(500)
+
   const mockUser = {
-    _id: 'mock-user-id-' + Date.now(),
+    _id: generateId('user'),
     name: userData.name,
     email: userData.email,
   }
-  
-  const mockToken = 'mock-jwt-token-' + Date.now()
-  
-  // Store in localStorage
-  localStorage.setItem('jwt', mockToken)
-  localStorage.setItem('user', JSON.stringify(mockUser))
-  
-  return { token: mockToken, user: mockUser }
+  const token = generateToken()
+
+  setLocalStorage('jwt', token)
+  setLocalStorage('user', mockUser)
+
+  return { token, user: mockUser }
 }
 
-// Check if user is logged in (check token)
+// Check token
 export const mockCheckToken = async () => {
+  await simulateDelay(200)
+
   const token = localStorage.getItem('jwt')
-  const userStr = localStorage.getItem('user')
-  
-  if (!token || !userStr) {
-    return null
-  }
-  
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 200))
-  
-  try {
-    const user = JSON.parse(userStr)
-    return { token, user }
-  } catch {
-    return null
-  }
+  const user = getLocalStorage('user')
+
+  if (!token || !user) return null
+  return { token, user }
 }
 
 // Get saved articles
 export const mockGetSavedArticles = async () => {
-  const savedStr = localStorage.getItem('savedArticles')
-  
-  if (!savedStr) {
-    return []
-  }
-  
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 200))
-  
-  try {
-    return JSON.parse(savedStr)
-  } catch {
-    return []
-  }
+  await simulateDelay(200)
+  return getLocalStorage('savedArticles', [])
 }
 
-// Save an article
+// Save article
 export const mockSaveArticle = async (article) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300))
-  
-  const savedStr = localStorage.getItem('savedArticles')
-  const savedArticles = savedStr ? JSON.parse(savedStr) : []
-  
-  // Check if already saved
-  if (savedArticles.some(saved => saved.url === article.url)) {
-    return savedArticles
-  }
-  
-  // Add article with additional fields
+  if (!article?.url) throw new Error('Invalid article object')
+
+  await simulateDelay(300)
+
+  const savedArticles = getLocalStorage('savedArticles', [])
+
+  if (savedArticles.some((a) => a.url === article.url)) return savedArticles
+
   const articleToSave = {
     ...article,
-    _id: 'saved-' + Date.now(),
+    _id: generateId('article'),
     savedAt: new Date().toISOString(),
   }
-  
-  savedArticles.push(articleToSave)
-  localStorage.setItem('savedArticles', JSON.stringify(savedArticles))
-  
-  return savedArticles
+  const updatedArticles = [...savedArticles, articleToSave]
+
+  setLocalStorage('savedArticles', updatedArticles)
+  return updatedArticles
 }
 
-// Delete a saved article
+// Delete article
 export const mockDeleteArticle = async (article) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 300))
-  
-  const savedStr = localStorage.getItem('savedArticles')
-  if (!savedStr) {
-    return []
-  }
-  
-  const savedArticles = JSON.parse(savedStr)
-  const filtered = savedArticles.filter(saved => saved.url !== article.url)
-  
-  localStorage.setItem('savedArticles', JSON.stringify(filtered))
-  
-  return filtered
-}
+  if (!article?.url) throw new Error('Invalid article object')
 
+  await simulateDelay(300)
+
+  const savedArticles = getLocalStorage('savedArticles', [])
+  const updatedArticles = savedArticles.filter((a) => a.url !== article.url)
+
+  setLocalStorage('savedArticles', updatedArticles)
+  return updatedArticles
+}

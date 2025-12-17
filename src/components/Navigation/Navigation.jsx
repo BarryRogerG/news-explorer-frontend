@@ -1,50 +1,50 @@
-import { Link, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+
 import './Navigation.css'
 
-function Navigation({ onSignInClick, onSignOut, isMainPage = false, isLoggedIn = false, currentUser = null }) {
-  const location = useLocation()
-  const isHomePage = location.pathname === '/'
-  const isSavedNewsPage = location.pathname === '/saved-news'
-
-  const handleSignInClick = () => {
-    if (onSignInClick) {
-      onSignInClick()
-    }
-  }
-
-  const handleSignOutClick = () => {
-    if (onSignOut) {
-      onSignOut()
-    }
-  }
-
+function Navigation({
+  onSignInClick,
+  onSignOut,
+  isOverlay = false,
+  isLoggedIn = false,
+  currentUser,
+}) {
   return (
-    <nav className={`navigation ${isMainPage ? 'navigation_overlay' : ''}`}>
-      <Link 
-        to="/" 
-        className={`navigation__link ${isHomePage ? 'navigation__link_active' : ''}`}
+    <nav className={`navigation ${isOverlay ? 'navigation_overlay' : ''}`}>
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          `navigation__link ${isActive ? 'navigation__link_active' : ''}`
+        }
       >
         Home
-      </Link>
+      </NavLink>
+
       {isLoggedIn && (
-        <Link 
-          to="/saved-news" 
-          className={`navigation__link ${isSavedNewsPage ? 'navigation__link_active' : ''}`}
+        <NavLink
+          to="/saved-news"
+          className={({ isActive }) =>
+            `navigation__link ${isActive ? 'navigation__link_active' : ''}`
+          }
         >
           Saved articles
-        </Link>
+        </NavLink>
       )}
+
       {isLoggedIn ? (
-        <button 
+        <button
+          type="button"
           className="navigation__button"
-          onClick={handleSignOutClick}
+          onClick={onSignOut}
+          aria-label="Sign out"
         >
           {currentUser?.name || 'Sign out'}
         </button>
       ) : (
-        <button 
+        <button
+          type="button"
           className="navigation__button"
-          onClick={handleSignInClick}
+          onClick={onSignInClick}
         >
           Sign in
         </button>
