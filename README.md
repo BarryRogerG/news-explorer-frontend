@@ -147,3 +147,4 @@ In Stage 2, these will be replaced with real backend API calls.
 ## License
 
 ISC
+here is a short video on the front-end of the project so far { https://www.loom.com/share/717c2f5213c4479f9f45da95b3e1aed1 }
