@@ -20,7 +20,6 @@ function Main({
   const [hasSearched, setHasSearched] = useState(false)
   const [error, setError] = useState(null)
   const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT)
-  const [searchKeyword, setSearchKeyword] = useState('')
 
   const normalizeSearchTerm = (term) => term.trim()
 
@@ -36,7 +35,6 @@ function Main({
     setHasSearched(true)
     setError(null)
     setDisplayCount(INITIAL_DISPLAY_COUNT)
-    setSearchKeyword(normalizedTerm)
 
     try {
       const articles = await searchNews(normalizedTerm)

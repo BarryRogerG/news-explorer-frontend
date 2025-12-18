@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Footer.css'
 
 function Footer() {
@@ -9,7 +10,7 @@ function Footer() {
         © {currentYear} Supersite, Powered by News API
       </p>
       <nav className="footer__nav">
-        <a href="/" className="footer__link">Home</a>
+        <Link to="/" className="footer__link">Home</Link>
         <a href="https://tripleten.com" className="footer__link" target="_blank" rel="noopener noreferrer">
           TripleTen
         </a>
@@ -19,4 +20,5 @@ function Footer() {
 }
 
 export default Footer
+
 

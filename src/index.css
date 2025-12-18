@@ -1,5 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
+/* Inter font - Regular (400) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/inter-400-regular.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/inter-400-regular.woff') format('woff');
+}
+
+/* Inter font - Medium (500) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/inter-500.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/inter-500.woff') format('woff');
+}
+
+/* Inter font - Bold (700) - browser will use 500 weight or fall back to system fonts */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/inter-500.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/inter-500.woff') format('woff');
+}
+
+/* Inter font - Black (900) - browser will use 500 weight or fall back to system fonts */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/inter-500.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/inter-500.woff') format('woff');
+}
+
+/* Roboto Slab font - Regular (400) */
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/roboto-slab-400-regular.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/roboto-slab-400-regular.woff') format('woff');
+}
+
+/* Roboto Slab font - Bold (700) */
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/roboto-slab-700.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/roboto-slab-700.woff') format('woff');
+}
 
 * {
   margin: 0;
