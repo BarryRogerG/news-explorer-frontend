@@ -8,14 +8,23 @@ function Navigation({
   isOverlay = false,
   isLoggedIn = false,
   currentUser,
+  isMobile = false,
+  onLinkClick,
 }) {
+  const handleLinkClick = () => {
+    if (onLinkClick) {
+      onLinkClick()
+    }
+  }
+
   return (
-    <nav className={`navigation ${isOverlay ? 'navigation_overlay' : ''}`}>
+    <nav className={`navigation ${isOverlay ? 'navigation_overlay' : ''} ${isMobile ? 'navigation_mobile' : 'navigation_desktop'}`}>
       <NavLink
         to="/"
         className={({ isActive }) =>
           `navigation__link ${isActive ? 'navigation__link_active' : ''}`
         }
+        onClick={handleLinkClick}
       >
         Home
       </NavLink>
@@ -26,6 +35,7 @@ function Navigation({
           className={({ isActive }) =>
             `navigation__link ${isActive ? 'navigation__link_active' : ''}`
           }
+          onClick={handleLinkClick}
         >
           Saved articles
         </NavLink>

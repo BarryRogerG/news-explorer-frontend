@@ -83,6 +83,9 @@ npm install
 VITE_NEWS_API_KEY=your_api_key_here
 ```
 
+   **For Reviewers:** Please create a `.env` file in the root directory with your News API key.
+   You can get a free API key from https://newsapi.org/register
+
 4. Start the development server:
 ```bash
 npm run dev
@@ -103,7 +106,9 @@ npm run dev
 
 The application is deployed using GitHub Pages. The deployment is automated via GitHub Actions.
 
-**Deployed Site:** [Add your GitHub Pages URL here after deployment]
+**Deployed Site:** [Deployment link will be added here after deployment]
+
+**Note:** The app is configured for GitHub Pages deployment. After deploying, update this link with your actual deployment URL.
 
 To deploy manually:
 1. Build the project: `npm run build`
