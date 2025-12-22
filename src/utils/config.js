@@ -22,3 +22,22 @@ export const isApiKeyConfigured = () => {
   return !!NEWS_API_KEY && NEWS_API_KEY !== '';
 };
 
+// Helper to get API key status (for debugging/testing)
+// This can be called from browser console via window object
+export const getApiKeyStatus = () => {
+  const hasKey = isApiKeyConfigured();
+  const keyLength = NEWS_API_KEY ? NEWS_API_KEY.length : 0;
+  const keyPreview = NEWS_API_KEY 
+    ? NEWS_API_KEY.substring(0, 4) + '...' + NEWS_API_KEY.substring(keyLength - 4)
+    : 'NOT SET';
+  
+  return {
+    configured: hasKey,
+    keyLength: keyLength,
+    keyPreview: keyPreview,
+    message: hasKey 
+      ? `API key is configured (${keyLength} characters)` 
+      : 'API key is NOT configured'
+  };
+};
+

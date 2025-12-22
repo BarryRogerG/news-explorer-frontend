@@ -59,8 +59,10 @@ export const searchNews = async (keyword) => {
     throw new Error('Please enter a keyword')
   }
 
-  if (!NEWS_API_KEY) {
-    throw new Error('API key is missing')
+  if (!NEWS_API_KEY || NEWS_API_KEY.trim() === '') {
+    throw new Error(
+      'API key is missing. Please create a .env file in the root directory with VITE_NEWS_API_KEY=your_api_key_here. Get a free API key from https://newsapi.org/register'
+    )
   }
 
   const params = new URLSearchParams({

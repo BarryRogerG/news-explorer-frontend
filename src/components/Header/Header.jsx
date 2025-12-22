@@ -43,22 +43,19 @@ function Header({ onSignInClick, onSignOut, isLoggedIn, currentUser }) {
       </button>
       <div 
         className={`header__menu-overlay ${isMenuOpen ? 'header__menu-overlay_open' : ''}`} 
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            handleMenuClose()
-          }
-        }}
-      >
-        <Navigation 
-          onSignInClick={handleSignInClick}
-          onSignOut={handleSignOut}
-          isOverlay={isMainPage}
-          isLoggedIn={isLoggedIn}
-          currentUser={currentUser}
-          isMobile={true}
-          onLinkClick={handleMenuClose}
-        />
-      </div>
+        onClick={handleMenuClose}
+      />
+      <Navigation 
+        onSignInClick={handleSignInClick}
+        onSignOut={handleSignOut}
+        isOverlay={isMainPage}
+        isLoggedIn={isLoggedIn}
+        currentUser={currentUser}
+        isMobile={true}
+        isMenuOpen={isMenuOpen}
+        onLinkClick={handleMenuClose}
+        onCloseMenu={handleMenuClose}
+      />
       <Navigation 
         onSignInClick={onSignInClick}
         onSignOut={onSignOut}

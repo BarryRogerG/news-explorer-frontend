@@ -9,7 +9,9 @@ function Navigation({
   isLoggedIn = false,
   currentUser,
   isMobile = false,
+  isMenuOpen = false,
   onLinkClick,
+  onCloseMenu,
 }) {
   const handleLinkClick = () => {
     if (onLinkClick) {
@@ -18,16 +20,31 @@ function Navigation({
   }
 
   return (
-    <nav className={`navigation ${isOverlay ? 'navigation_overlay' : ''} ${isMobile ? 'navigation_mobile' : 'navigation_desktop'}`}>
-      <NavLink
-        to="/"
-        className={({ isActive }) =>
-          `navigation__link ${isActive ? 'navigation__link_active' : ''}`
-        }
-        onClick={handleLinkClick}
-      >
-        Home
-      </NavLink>
+    <nav className={`navigation ${isOverlay ? 'navigation_overlay' : ''} ${isMobile ? 'navigation_mobile' : 'navigation_desktop'} ${isMobile && isMenuOpen ? 'navigation_mobile_open' : ''}`}>
+      {isMobile && (
+        <div className="navigation_mobile__header">
+          <span className="navigation_mobile__logo">NewsExplorer</span>
+          <button
+            type="button"
+            className="navigation_mobile__close"
+            onClick={onCloseMenu}
+            aria-label="Close menu"
+          >
+            <span className="navigation_mobile__close-icon"></span>
+            <span className="navigation_mobile__close-icon"></span>
+          </button>
+        </div>
+      )}
+      <div className={isMobile ? 'navigation_mobile__content' : 'navigation__content'}>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `navigation__link ${isActive ? 'navigation__link_active' : ''}`
+          }
+          onClick={handleLinkClick}
+        >
+          Home
+        </NavLink>
 
       {isLoggedIn && (
         <NavLink
@@ -59,6 +76,7 @@ function Navigation({
           Sign in
         </button>
       )}
+      </div>
     </nav>
   )
 }
