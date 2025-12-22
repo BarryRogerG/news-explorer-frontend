@@ -113,75 +113,11 @@ See [TESTING.md](./TESTING.md) for detailed instructions on testing the API key 
 
 ## Deployment
 
-The application can be deployed using several platforms. Choose the option that works best for you:
-
-**📖 For detailed Google Cloud deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)**
-
-### Option 1: Google Cloud VM (If you already have a VM)
-
-If you have an existing Google Cloud VM instance:
-
-1. Build the project: `npm run build`
-2. Follow the detailed guide in [DEPLOYMENT_GOOGLE_CLOUD.md](./DEPLOYMENT_GOOGLE_CLOUD.md)
-3. Your app will be available at: `http://YOUR_EXTERNAL_IP` (or subdomain if configured)
+The application is deployed and accessible at:
 
 **Deployed Site:** http://34.134.30.14
 
-**Note:** The site is currently accessible via IP address. To use the subdomain `news-explorer.bestbudwtwr.ignorelist.com`, add a DNS A record pointing to `34.134.30.14`. SSL certificate setup was delayed due to Let's Encrypt rate limits (can be set up after Dec 22, 19:39:48 UTC).
-
-### Option 2: Vercel (Recommended - Easiest)
-
-1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
-2. Click "Add New Project"
-3. Import your repository: `BarryRogerG/news-explorer-frontend`
-4. Configure:
-   - **Framework Preset**: Vite
-   - **Root Directory**: `./` (default)
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-   - **Environment Variables**: Add `VITE_NEWS_API_KEY` (your API key)
-5. Click "Deploy"
-6. Your app will be live at `https://your-project-name.vercel.app`
-
-**Deployed Site:** [Add your Vercel deployment URL here after deploying]
-
-### Option 2: GitHub Pages
-
-The application is configured for GitHub Pages deployment via GitHub Actions.
-
-**Prerequisites:**
-1. Enable GitHub Pages in your repository settings:
-   - Go to Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: `gh-pages` (or select GitHub Actions)
-
-2. Add your API key as a GitHub Secret:
-   - Go to Settings → Secrets and variables → Actions
-   - Add new secret: `VITE_NEWS_API_KEY` with your API key value
-
-3. Push to the `main` branch - deployment will happen automatically
-
-**Deployed Site:** [Add your GitHub Pages URL here: `https://barryrogerg.github.io/news-explorer-frontend/`]
-
-### Option 3: Netlify
-
-1. Go to [netlify.com](https://netlify.com) and sign in with GitHub
-2. Click "Add new site" → "Import an existing project"
-3. Select your repository
-4. Configure:
-   - **Build command**: `npm run build`
-   - **Publish directory**: `dist`
-   - **Environment variables**: Add `VITE_NEWS_API_KEY`
-5. Click "Deploy site"
-
-**Deployed Site:** [Add your Netlify deployment URL here after deploying]
-
-### Manual Deployment
-
-To deploy manually:
-1. Build the project: `npm run build`
-2. The `dist` folder will contain the production build
-3. Upload the contents of `dist` to your hosting provider
+For deployment instructions, see [DEPLOYMENT_GOOGLE_CLOUD.md](./DEPLOYMENT_GOOGLE_CLOUD.md)
 
 ## API Configuration
 
