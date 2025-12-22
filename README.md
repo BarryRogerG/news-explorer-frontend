@@ -123,9 +123,11 @@ If you have an existing Google Cloud VM instance:
 
 1. Build the project: `npm run build`
 2. Follow the detailed guide in [DEPLOYMENT_GOOGLE_CLOUD.md](./DEPLOYMENT_GOOGLE_CLOUD.md)
-3. Your app will be available at: `http://YOUR_EXTERNAL_IP:8080` (or the port you configure)
+3. Your app will be available at: `http://YOUR_EXTERNAL_IP` (or subdomain if configured)
 
-**Deployed Site:** [Add your Google Cloud VM external IP and port here after deployment, e.g., `http://34.123.45.67:8080`]
+**Deployed Site:** http://34.134.30.14
+
+**Note:** The site is currently accessible via IP address. To use the subdomain `news-explorer.bestbudwtwr.ignorelist.com`, add a DNS A record pointing to `34.134.30.14`. SSL certificate setup was delayed due to Let's Encrypt rate limits (can be set up after Dec 22, 19:39:48 UTC).
 
 ### Option 2: Vercel (Recommended - Easiest)
 
