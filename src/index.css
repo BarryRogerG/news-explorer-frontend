@@ -18,24 +18,44 @@
        url('/final-project_fonts_latin%20(1)/inter-500.woff') format('woff');
 }
 
-/* Inter font - Bold (700) - browser will use 500 weight or fall back to system fonts */
+/* Roboto font - Regular (400) */
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/roboto-400-regular.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/roboto-400-regular.woff') format('woff');
+}
+
+/* Roboto font - Medium (500) */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/final-project_fonts_latin%20(1)/roboto-500.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/roboto-500.woff') format('woff');
+}
+
+/* Roboto font - Bold (700) */
+@font-face {
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/final-project_fonts_latin%20(1)/inter-500.woff2') format('woff2'),
-       url('/final-project_fonts_latin%20(1)/inter-500.woff') format('woff');
+  src: url('/final-project_fonts_latin%20(1)/roboto-700.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/roboto-700.woff') format('woff');
 }
 
-/* Inter font - Black (900) - browser will use 500 weight or fall back to system fonts */
+/* Roboto font - Black (900) */
 @font-face {
-  font-family: 'Inter';
+  font-family: 'Roboto';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: url('/final-project_fonts_latin%20(1)/inter-500.woff2') format('woff2'),
-       url('/final-project_fonts_latin%20(1)/inter-500.woff') format('woff');
+  src: url('/final-project_fonts_latin%20(1)/roboto-900.woff2') format('woff2'),
+       url('/final-project_fonts_latin%20(1)/roboto-900.woff') format('woff');
 }
 
 /* Roboto Slab font - Regular (400) */

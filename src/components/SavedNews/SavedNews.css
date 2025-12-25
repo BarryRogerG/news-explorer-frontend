@@ -20,12 +20,12 @@
 }
 
 .saved-news__title {
+  font-family: 'Roboto Slab', Georgia, 'Times New Roman', serif;
   font-size: 40px;
   font-weight: 400;
   line-height: 46px;
   color: #1a1a1a;
   margin: 0 0 28px 0;
-  font-family: 'Inter', sans-serif;
 }
 
 .saved-news__subtitle {
