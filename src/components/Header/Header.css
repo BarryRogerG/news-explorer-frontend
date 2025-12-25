@@ -14,6 +14,23 @@
   overflow: visible;
 }
 
+@media (min-width: 768px) {
+  .header {
+    height: 66px;
+    padding-right: 40px; /* Button 40px from right edge */
+    padding-left: 0 !important; /* No left padding, logo handles its own spacing */
+  }
+  
+  .header__logo {
+    height: 66px;
+    margin-left: 40px !important; /* Logo positioned 40px from left edge */
+  }
+
+  .navigation {
+    margin-left: 132px; /* 132px gap between logo and Home link */
+  }
+}
+
 .header.header_overlay {
   background-color: transparent;
   position: absolute;
@@ -93,26 +110,26 @@
 }
 
 .header__menu-overlay {
-  display: none;
+  display: none !important;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  z-index: 11;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  pointer-events: none;
+  z-index: 10;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease, left 0.3s ease;
+  pointer-events: none !important;
 }
 
 .header__menu-overlay_open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  display: none !important;
 }
 
 
@@ -148,17 +165,35 @@
   }
 
   .header__menu-overlay {
-    display: block;
+    display: none !important; /* Overlay removed - no dark background */
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  
+  .header__menu-overlay_open {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
   .header_menu-open {
     background-color: #ffffff;
     border-bottom: 1px solid rgba(196, 196, 196, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
   }
 
   .header_menu-open.header_overlay {
     background-color: #ffffff;
     border-bottom: 1px solid rgba(196, 196, 196, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
   }
 
   .header_menu-open .header__logo {

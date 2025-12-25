@@ -45,6 +45,12 @@
   opacity: 0.6;
 }
 
+.modal__close-button:focus {
+  outline: 2px solid #2f71e5;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .modal__title {
   font-size: 24px;
   font-weight: 900;
@@ -90,6 +96,11 @@
   cursor: not-allowed;
 }
 
+.modal__submit-button:focus:not(:disabled) {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
 .modal__footer {
   text-align: center;
   margin-top: 16px;
@@ -119,6 +130,12 @@
 
 .modal__footer-link:hover {
   opacity: 0.7;
+}
+
+.modal__footer-link:focus {
+  outline: 2px solid #2f71e5;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 @media (max-width: 768px) {

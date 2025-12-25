@@ -82,9 +82,10 @@
 @media (max-width: 768px) {
   .about {
     flex-direction: column;
-    padding: 40px 16px;
+    padding: 0 16px 40px 16px;
     gap: 24px;
     align-items: center;
+    margin-top: 0;
   }
 
   .about__image-placeholder {

@@ -41,10 +41,7 @@ function Header({ onSignInClick, onSignOut, isLoggedIn, currentUser }) {
         <span className="header__menu-icon"></span>
         <span className="header__menu-icon"></span>
       </button>
-      <div 
-        className={`header__menu-overlay ${isMenuOpen ? 'header__menu-overlay_open' : ''}`} 
-        onClick={handleMenuClose}
-      />
+      {/* Overlay removed - no dark background needed */}
       <Navigation 
         onSignInClick={handleSignInClick}
         onSignOut={handleSignOut}
