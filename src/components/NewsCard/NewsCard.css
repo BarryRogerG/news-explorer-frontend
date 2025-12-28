@@ -102,6 +102,24 @@
   fill: #2f71e5;
 }
 
+.trash-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.trash-icon__path {
+  stroke: white;
+  fill: none;
+}
+
+.news-card__bookmark_trash {
+  background-color: #b6bcbf;
+}
+
+.news-card__bookmark_trash:hover {
+  background-color: #9fa4a8;
+}
+
 .news-card__bookmark-tooltip-wrapper {
   position: relative;
 }
