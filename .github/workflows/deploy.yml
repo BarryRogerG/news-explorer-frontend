@@ -34,6 +34,14 @@ jobs:
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          enablement: true
+      
+      - name: Verify build output
+        run: |
+          echo "Listing build output"
+          ls -la ./dist || (echo "dist directory not found — build may have failed" && exit 1)
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
