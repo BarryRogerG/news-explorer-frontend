@@ -1,0 +1,195 @@
+import { useCallback } from 'react'
+
+import PropTypes from 'prop-types'
+
+import './NewsCard.css'
+
+const formatDate = (dateString) =>
+  dateString
+    ? new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    : ''
+
+function BookmarkIcon({ filled }) {
+  return (
+    <svg
+      className={`bookmark-icon ${filled ? 'bookmark-icon_filled' : ''}`}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        className="bookmark-icon__path"
+        d="M17 3H7C5.9 3 5 3.9 5 5V21L12 18L19 21V5C19 3.9 18.1 3 17 3Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+BookmarkIcon.propTypes = {
+  filled: PropTypes.bool,
+}
+
+function TrashIcon() {
+  return (
+    <svg
+      className="trash-icon"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        className="trash-icon__path"
+        d="M3 6H5H21M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        className="trash-icon__path"
+        d="M10 11V17M14 11V17"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function NewsCard({
+  card,
+  isLoggedIn = false,
+  isSaved = false,
+  onSaveClick,
+  onDeleteClick,
+  onCardClick,
+}) {
+  const {
+    title = 'No title available',
+    description,
+    content,
+    url,
+    urlToImage,
+    publishedAt,
+    keyword = 'Nature',
+    source,
+  } = card || {}
+
+  const sourceName = source?.name || source || 'Unknown Source'
+
+  // Determine if we're on the saved articles page (trash icon) vs main page (bookmark icon)
+  const isOnSavedPage = isSaved && !onSaveClick
+
+  const handleBookmarkClick = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (isSaved) {
+        onDeleteClick?.(card)
+      } else {
+        onSaveClick?.(card)
+      }
+    },
+    [isSaved, onDeleteClick, onSaveClick, card]
+  )
+
+  const handleCardClick = useCallback(() => {
+    if (onCardClick && url) {
+      onCardClick(url)
+    }
+  }, [onCardClick, url])
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        handleCardClick()
+      }
+    },
+    [handleCardClick]
+  )
+
+  return (
+    <article
+      className={`news-card ${onCardClick ? 'news-card_clickable' : ''}`}
+      role={onCardClick ? 'button' : undefined}
+      tabIndex={onCardClick ? 0 : undefined}
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+    >
+      <div className="news-card__image-container">
+        {urlToImage ? (
+          <img
+            src={urlToImage}
+            alt={title}
+            className="news-card__image"
+            loading="lazy"
+          />
+        ) : (
+          <div className="news-card__image-placeholder">No Image</div>
+        )}
+
+        <div className="news-card__bookmark-container">
+          {isLoggedIn ? (
+            <button
+              type="button"
+              className={`news-card__bookmark ${
+                isSaved && !isOnSavedPage ? 'news-card__bookmark_saved' : ''
+              } ${isOnSavedPage ? 'news-card__bookmark_trash' : ''}`}
+              onClick={handleBookmarkClick}
+              aria-label={isOnSavedPage ? 'Delete article' : isSaved ? 'Remove from saved' : 'Save article'}
+            >
+              {isOnSavedPage ? <TrashIcon /> : <BookmarkIcon filled={isSaved} />}
+            </button>
+          ) : (
+            <div className="news-card__bookmark-tooltip-wrapper">
+              <button
+                type="button"
+                className="news-card__bookmark news-card__bookmark_inactive"
+                aria-label="Sign in to save articles"
+                disabled
+              >
+                <BookmarkIcon />
+              </button>
+              <div className="news-card__tooltip">
+                Sign in to save articles
+              </div>
+            </div>
+          )}
+        </div>
+
+        {!isLoggedIn && (
+          <div className="news-card__keyword">{keyword}</div>
+        )}
+      </div>
+
+      <div className="news-card__content">
+        <p className="news-card__date">{formatDate(publishedAt)}</p>
+        <h3 className="news-card__title">{title}</h3>
+        <p className="news-card__description">
+          {description || content || 'No description available'}
+        </p>
+        <p className="news-card__source">{sourceName}</p>
+      </div>
+    </article>
+  )
+}
+
+NewsCard.propTypes = {
+  card: PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool,
+  isSaved: PropTypes.bool,
+  onSaveClick: PropTypes.func,
+  onDeleteClick: PropTypes.func,
+  onCardClick: PropTypes.func,
+}
+
+export default NewsCard

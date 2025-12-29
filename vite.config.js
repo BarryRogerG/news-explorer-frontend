@@ -1,0 +1,15 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig(() => {
+  // For GitHub Pages, use repository name as base path
+  // For Vercel/Netlify/Google Cloud, use root path '/'
+  // You can override with VITE_BASE_PATH environment variable
+  const base = process.env.VITE_BASE_PATH || '/'
+  
+  return {
+    plugins: [react()],
+    base,
+  }
+})
