@@ -105,7 +105,7 @@
   display: inline-block;
 }
 
-.navigation__button_logout svg {
+.navigation__button_logout-icon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
@@ -295,7 +295,7 @@
     padding: 16px 20px;
   }
   
-  .navigation_mobile__content .navigation__button_logout svg {
+  .navigation_mobile__content .navigation__button_logout-icon {
     width: 24px;
     height: 24px;
     flex-shrink: 0;

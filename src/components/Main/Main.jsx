@@ -94,7 +94,7 @@ function Main({
           <div className="main__api-warning">
             <p className="main__api-warning-text">
               ⚠️ API key not configured. Please add{" "}
-              <code>VITE_NEWS_API_KEY</code> to your <code>.env</code> file to
+              <code className="main__api-warning-text-code">VITE_NEWS_API_KEY</code> to your <code className="main__api-warning-text-code">.env</code> file to
               enable search functionality.
             </p>
           </div>
@@ -115,13 +115,13 @@ function Main({
                   functionality, please:
                 </p>
                 <ol className="main__error-help-list">
-                  <li>
-                    Create a <code>.env</code> file in the project root
+                  <li className="main__error-help-list-item">
+                    Create a <code className="main__error-help-list-code">.env</code> file in the project root
                   </li>
-                  <li>
-                    Add: <code>VITE_NEWS_API_KEY=your_api_key_here</code>
+                  <li className="main__error-help-list-item">
+                    Add: <code className="main__error-help-list-code">VITE_NEWS_API_KEY=your_api_key_here</code>
                   </li>
-                  <li>
+                  <li className="main__error-help-list-item">
                     Get a free API key from{" "}
                     <a
                       href="https://newsapi.org/register"
@@ -132,7 +132,7 @@ function Main({
                       https://newsapi.org/register
                     </a>
                   </li>
-                  <li>Restart the development server</li>
+                  <li className="main__error-help-list-item">Restart the development server</li>
                 </ol>
               </div>
             )}

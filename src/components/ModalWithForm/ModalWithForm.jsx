@@ -24,11 +24,11 @@ function ModalWithForm({
     };
 
     document.addEventListener("keydown", handleEscape);
-    document.body.classList.add("modal-open");
+    document.body.classList.add("page_modal-open");
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      document.body.classList.remove("modal-open");
+      document.body.classList.remove("page_modal-open");
     };
   }, [isOpen, onClose]);
 

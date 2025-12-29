@@ -75,7 +75,7 @@
   text-align: left;
 }
 
-.main__api-warning-text code {
+.main__api-warning-text-code {
   background-color: rgba(0, 0, 0, 0.2);
   padding: 2px 6px;
   border-radius: 4px;
@@ -165,11 +165,11 @@
   line-height: 24px;
 }
 
-.main__error-help-list li {
+.main__error-help-list-item {
   margin-bottom: 8px;
 }
 
-.main__error-help-list code {
+.main__error-help-list-code {
   background-color: #fff;
   padding: 2px 6px;
   border-radius: 4px;

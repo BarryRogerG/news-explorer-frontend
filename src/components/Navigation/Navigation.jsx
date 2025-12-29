@@ -5,6 +5,7 @@ import './Navigation.css'
 function LogoutIcon() {
   return (
     <svg
+      className="navigation__button_logout-icon"
       width="24"
       height="24"
       viewBox="0 0 24 24"
